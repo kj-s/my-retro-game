@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Famicom Adventure</title>
+    <!-- Google Fonts: Retro Press Start 2P and Modern Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Modern Aesthetic Sidebar/Background Panels -->
+        <header class="game-header">
+            <h1>RETRO ADVENTURE</h1>
+            <div class="subtitle">HTML5 CANVASCRAFT &bull; WEB AUDIO SYSTEM</div>
+        </header>
+
+        <!-- Main Console Wrapper -->
+        <div class="console-wrapper">
+            <!-- CRT Bezel & Screen -->
+            <div class="crt-bezel">
+                <div class="console-label">8-BIT ENTERTAINMENT SYSTEM</div>
+                <!-- Status LEDs -->
+                <div class="led-panel">
+                    <div class="led-group">
+                        <div class="led power-led active"></div>
+                        <span class="led-text">POWER</span>
+                    </div>
+                </div>
+
+                <div class="screen-container">
+                    <!-- Scanning line overlays -->
+                    <div class="scanlines"></div>
+                    <div class="screen-glare"></div>
+
+                    <!-- HUD Panel (Retro Overlay) -->
+                    <div class="hud" id="hud">
+                        <div class="hud-item">
+                            <div>MARIO</div>
+                            <div id="hud-score">000000</div>
+                        </div>
+                        <div class="hud-item">
+                            <div>COINS</div>
+                            <div id="hud-coins">🪙x00</div>
+                        </div>
+                        <div class="hud-item">
+                            <div>WORLD</div>
+                            <div id="hud-world">1-1</div>
+                        </div>
+                        <div class="hud-item">
+                            <div>TIME</div>
+                            <div id="hud-time">400</div>
+                        </div>
+                    </div>
+
+                    <!-- Screen Canvas -->
+                    <canvas id="gameCanvas" width="512" height="448"></canvas>
+
+                    <!-- Screens Overlay (Start / Game Over / Game Clear) -->
+                    <div class="screen-overlay active" id="startScreen">
+                        <div class="overlay-content">
+                            <h2 class="blink" style="margin-bottom: 15px;">PRESS START</h2>
+                            
+                            <div class="level-select">
+                                <div class="level-option active" id="opt-11">
+                                    <span class="pointer">▶</span>WORLD 1-1
+                                </div>
+                                <div class="level-option" id="opt-12">
+                                    <span class="pointer" style="visibility: hidden;">▶</span>WORLD 1-2
+                                </div>
+                                <div class="level-option" id="opt-13">
+                                    <span class="pointer" style="visibility: hidden;">▶</span>WORLD 1-3
+                                </div>
+                            </div>
+
+                            <button class="menu-btn" id="startBtn">START GAME</button>
+                            <p class="audio-notice">※ 音声を有効にするためクリックして開始してください</p>
+                        </div>
+                    </div>
+
+                    <div class="screen-overlay" id="gameOverScreen">
+                        <div class="overlay-content">
+                            <h2 class="danger-text">GAME OVER</h2>
+                            <button class="menu-btn" id="retryBtn">TRY AGAIN</button>
+                        </div>
+                    </div>
+
+                    <div class="screen-overlay" id="gameClearScreen">
+                        <div class="overlay-content">
+                            <h2 class="success-text">STAGE CLEAR!</h2>
+                            <div class="clear-stats">
+                                <p>SCORE: <span id="finalScore">000000</span></p>
+                                <p>TIME BONUS: <span id="timeBonus">0</span></p>
+                            </div>
+                            <button class="menu-btn" id="clearBtn">PLAY AGAIN</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Virtual Gamepad for Mobile/Touch -->
+        <div class="virtual-gamepad">
+            <div class="d-pad">
+                <button class="pad-btn pad-left" id="btn-left" aria-label="Left">◀</button>
+                <button class="pad-btn pad-right" id="btn-right" aria-label="Right">▶</button>
+                <button class="pad-btn pad-down" id="btn-down" aria-label="Down">▼</button>
+            </div>
+            <div class="action-buttons">
+                <div class="btn-container">
+                    <button class="pad-action btn-b" id="btn-b" aria-label="Fire/Run">B</button>
+                    <span class="btn-label">FIRE / RUN</span>
+                </div>
+                <div class="btn-container">
+                    <button class="pad-action btn-a" id="btn-a" aria-label="Jump">A</button>
+                    <span class="btn-label">JUMP</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Guide & Footer (Modern Interface) -->
+        <footer class="controls-guide">
+            <div class="guide-section">
+                <h3>🎮 KEYBOARD CONTROLS</h3>
+                <div class="keys-grid">
+                    <div class="key-item"><kbd>←</kbd> / <kbd>A</kbd> <span>左右移動</span></div>
+                    <div class="key-item"><kbd>→</kbd> / <kbd>D</kbd> <span>左右移動</span></div>
+                    <div class="key-item"><kbd>↑</kbd> / <kbd>W</kbd> / <kbd>Space</kbd> <span>ジャンプ</span></div>
+                    <div class="key-item"><kbd>Shift</kbd> / <kbd>J</kbd> / <kbd>Z</kbd> <span>ダッシュ / ファイアボール発射</span></div>
+                </div>
+            </div>
+            <div class="author-credits">
+                &copy; 2026 Retro Famicom Adventure. Handcrafted with HTML5, CSS & Web Audio.
+            </div>
+        </footer>
+    </div>
+
+    <!-- Main Game Script -->
+    <script src="game.js?v=20260626-3stages"></script>
+</body>
+</html>

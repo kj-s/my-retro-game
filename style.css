@@ -1,0 +1,599 @@
+/* ==========================================================================
+   DESIGN SYSTEM & VARIABLES
+   ========================================================================== */
+:root {
+    --bg-dark: #0a0b10;
+    --bg-panel: rgba(22, 24, 35, 0.8);
+    --border-color: rgba(255, 255, 255, 0.1);
+    
+    /* Neon glow colors */
+    --accent-red: #ff3b30;
+    --accent-red-glow: rgba(255, 59, 48, 0.4);
+    --accent-blue: #007aff;
+    --accent-blue-glow: rgba(0, 122, 255, 0.4);
+    --accent-yellow: #ffcc00;
+    --accent-green: #34c759;
+    
+    /* Font stacks */
+    --font-retro: 'Press Start 2P', monospace;
+    --font-modern: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    /* Layout */
+    --console-width: 512px;
+    --console-height: 448px;
+}
+
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+body {
+    background: radial-gradient(circle at center, #1b2030 0%, var(--bg-dark) 100%);
+    color: #e4e6eb;
+    font-family: var(--font-modern);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+kbd {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: var(--accent-yellow);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   LAYOUT CONTAINER
+   ========================================================================== */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    gap: 20px;
+}
+
+/* HEADER STYLE */
+.game-header {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.game-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.game-header .subtitle {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6366f1;
+    letter-spacing: 3px;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   VIRTUAL ARCADE CABINET / BEZEL
+   ========================================================================== */
+.console-wrapper {
+    position: relative;
+    background: linear-gradient(145deg, #2e313d, #1c1d24);
+    border-radius: 24px;
+    padding: 16px;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.6),
+        inset 0 2px 3px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 10px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    max-width: calc(var(--console-width) + 32px);
+}
+
+.crt-bezel {
+    background: #15161d;
+    border-radius: 16px;
+    padding: 24px 12px 12px 12px;
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.8);
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.console-label {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-retro);
+    font-size: 9px;
+    color: #4b526d;
+    letter-spacing: 2px;
+    pointer-events: none;
+}
+
+/* POWER LED PANEL */
+.led-panel {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+}
+
+.led-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #331111;
+    transition: all 0.3s ease;
+}
+
+.led.active {
+    background-color: var(--accent-red);
+    box-shadow: 0 0 8px var(--accent-red), 0 0 15px var(--accent-red);
+}
+
+.led-text {
+    font-family: var(--font-retro);
+    font-size: 7px;
+    color: #8f92a1;
+}
+
+/* ==========================================================================
+   SCREEN CONTAINER & CRT EFFECT
+   ========================================================================== */
+.screen-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 8 / 7;
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) inset;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* SCANLINES OVERLAY */
+.scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.3) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.85;
+}
+
+/* CRT SCREEN GLARE EFFECT */
+.screen-glare {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at 50% 15%,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    pointer-events: none;
+    z-index: 6;
+}
+
+/* ==========================================================================
+   HUD SYSTEM (RETRO OVERLAY)
+   ========================================================================== */
+.hud {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 20px;
+    z-index: 10;
+    pointer-events: none;
+    font-family: var(--font-retro);
+    font-size: 12px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    line-height: 1.5;
+}
+
+.hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==========================================================================
+   OVERLAY SCREENS (START, OVER, CLEAR)
+   ========================================================================== */
+.screen-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 15;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.screen-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.overlay-content {
+    text-align: center;
+    font-family: var(--font-retro);
+    padding: 20px;
+}
+
+.overlay-content h2 {
+    font-size: 28px;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.blink {
+    animation: textBlink 1s infinite alternate;
+}
+
+.danger-text {
+    color: var(--accent-red);
+    text-shadow: 0 0 10px rgba(255, 59, 48, 0.5);
+}
+
+.success-text {
+    color: var(--accent-yellow);
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
+
+.audio-notice {
+    font-size: 8px;
+    color: #888;
+    margin-top: 15px;
+    font-family: var(--font-modern);
+}
+
+.clear-stats {
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* PRESETS BUTTONS */
+.menu-btn {
+    background-color: transparent;
+    border: 3px solid #fff;
+    color: #fff;
+    padding: 12px 24px;
+    font-family: var(--font-retro);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    box-shadow: 0 4px 0px #555;
+    border-radius: 4px;
+}
+
+.menu-btn:hover {
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0 4px 0px #bbb;
+}
+
+.menu-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   LEVEL SELECTION STYLES
+   ========================================================================== */
+.level-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-family: var(--font-retro);
+    font-size: 11px;
+}
+
+.level-option {
+    cursor: pointer;
+    padding: 6px 16px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #aaa;
+    border: 1px solid transparent;
+}
+
+.level-option:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.level-option.active {
+    color: var(--accent-yellow);
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+    border: 1px dashed rgba(255, 204, 0, 0.3);
+    background: rgba(255, 204, 0, 0.05);
+}
+
+.pointer {
+    font-size: 10px;
+    display: inline-block;
+    width: 14px;
+    animation: pointerFloat 0.6s infinite alternate;
+}
+
+@keyframes pointerFloat {
+    0% { transform: translateX(-2px); }
+    100% { transform: translateX(2px); }
+}
+
+/* ==========================================================================
+   VIRTUAL GAMEPAD (TOUCH DEVICES)
+   ========================================================================== */
+.virtual-gamepad {
+    display: none; /* Hidden on desktop by default */
+    width: 100%;
+    max-width: var(--console-width);
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+/* D-PAD */
+.d-pad {
+    position: relative;
+    width: 130px;
+    height: 130px;
+}
+
+.pad-btn {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.1s, transform 0.1s;
+    box-shadow: 0 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+.pad-btn:active {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.pad-left {
+    left: 0;
+    top: 45px;
+    width: 45px;
+    height: 40px;
+}
+
+.pad-right {
+    right: 0;
+    top: 45px;
+    width: 45px;
+    height: 40px;
+}
+
+.pad-down {
+    left: 45px;
+    bottom: 0;
+    width: 40px;
+    height: 45px;
+}
+
+/* ACTION BUTTONS (A / B) */
+.action-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-label {
+    font-family: var(--font-retro);
+    font-size: 7px;
+    color: #6c7289;
+}
+
+.pad-action {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    color: #fff;
+    font-family: var(--font-retro);
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 5px 0px rgba(0, 0, 0, 0.4);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn-b {
+    background: linear-gradient(135deg, #e63946 0%, #b70918 100%);
+    box-shadow: 0 5px 0px #70060f, 0 10px 15px rgba(230, 57, 70, 0.2);
+}
+
+.btn-a {
+    background: linear-gradient(135deg, #e63946 0%, #b70918 100%);
+    box-shadow: 0 5px 0px #70060f, 0 10px 15px rgba(230, 57, 70, 0.2);
+}
+
+.pad-action:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   CONTROLS GUIDE & FOOTER
+   ========================================================================== */
+.controls-guide {
+    width: 100%;
+    max-width: calc(var(--console-width) + 32px);
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.guide-section h3 {
+    font-size: 12px;
+    font-family: var(--font-retro);
+    color: #8a8d9f;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.keys-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 540px) {
+    .keys-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.key-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #a5a9bc;
+}
+
+.key-item span {
+    font-size: 11px;
+    color: #6c7289;
+}
+
+.author-credits {
+    text-align: center;
+    font-size: 11px;
+    color: #4b4e5f;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 15px;
+}
+
+/* ==========================================================================
+   ANIMATIONS & RESPONSIVE DESIGN
+   ========================================================================== */
+@keyframes textBlink {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+/* Show Gamepad on Touch Devices */
+@media (pointer: coarse) {
+    .virtual-gamepad {
+        display: flex;
+    }
+    .controls-guide .guide-section {
+        display: none; /* Hide keyboard controls guide on mobile */
+    }
+}
+
+/* Scale console down for small mobile viewports */
+@media (max-width: 580px) {
+    body {
+        padding: 10px;
+    }
+    
+    .console-wrapper {
+        border-radius: 16px;
+        padding: 8px;
+    }
+    
+    .crt-bezel {
+        padding: 16px 8px 8px 8px;
+    }
+    
+    .hud {
+        font-size: 9px;
+        padding: 0 10px;
+        top: 10px;
+    }
+}

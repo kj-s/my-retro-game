@@ -1,0 +1,13 @@
+{
+  "name": "retro-mario-famicom",
+  "version": "1.0.0",
+  "description": "Simple 2D Famicom-style Mario game in vanilla JS/CSS/HTML Canvas",
+  "main": "game.js",
+  "scripts": {
+    "start": "npx http-server -p 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
