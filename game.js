@@ -905,12 +905,13 @@ let levelUsesMarioSymbols = false;
 let selectedWorld = '1-1';
 const MAP_ROWS = 14;
 let MAP_COLS = 180; // Updated to match the loaded level width.
-const WORLD_ORDER = ['1-1', '1-2', '1-3', '1-4'];
+const WORLD_ORDER = ['1-1', '1-2', '1-3', '1-4', '1-5'];
 const LEVEL_FILES = {
     '1-1': 'mario-1-1.txt',
     '1-2': 'mario-1-2.txt',
     '1-3': 'mario-1-3.txt',
-    '1-4': 'mario-1-4.txt'
+    '1-4': 'mario-1-4.txt',
+    '1-5': 'mario-1-5.txt'
 };
 
 // --- DEFAULT ASCII LEVEL CONFIGURATION FALLBACKS ---
@@ -949,7 +950,8 @@ let levelData = {
     '1-1': DEFAULT_LEVELS['1-1'],
     '1-2': DEFAULT_LEVELS['1-2'],
     '1-3': DEFAULT_LEVELS['1-1'],
-    '1-4': DEFAULT_LEVELS['1-1']
+    '1-4': DEFAULT_LEVELS['1-1'],
+    '1-5': DEFAULT_LEVELS['1-1']
 };
 
 async function loadLevels() {
@@ -2027,6 +2029,10 @@ window.addEventListener('keydown', e => {
         } else if (e.code === 'Digit4' || e.code === 'Numpad4') {
             audio.init();
             selectWorld('1-4');
+            audio.playJump();
+        } else if (e.code === 'Digit5' || e.code === 'Numpad5') {
+            audio.init();
+            selectWorld('1-5');
             audio.playJump();
         }
     }
